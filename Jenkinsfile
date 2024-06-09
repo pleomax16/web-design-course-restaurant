@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     stages {
+	
         stage('Code Fetch') {
             steps {
                 echo 'Code Fetch from GitHub'
@@ -10,13 +11,14 @@ pipeline {
         }
         stage('Build Docker') {
             steps {
-              
-                sh 'docker build -t hiratest .'                
+                sh 'docker build -t hiratest .'
+                
             }
         }
         stage('Deploy Code') {
             steps {
                 echo 'Deploy on container'
+		sh 'docker  stop $(docker ps -q) && docker system prune -a'
                 sh 'docker run -d -p 80:80 hiratest'
             }
         }  
